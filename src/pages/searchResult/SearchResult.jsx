@@ -76,7 +76,10 @@ const SearchResult = () => {
               </InfiniteScroll>
             </>
           ) : (
-            <span className="resultNotFound">Sorry, results not found!</span>
+            <div className="notFound">
+              <img src={noResults} />
+              <span className="text">Sorry, results not found!</span>
+            </div>
           )}
         </ContentWrapper>
       )}

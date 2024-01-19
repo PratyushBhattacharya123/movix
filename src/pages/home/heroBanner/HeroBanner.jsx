@@ -19,15 +19,37 @@ const HeroBanner = () => {
   const { data, loading } = useFetch("/movie/upcoming");
 
   useEffect(() => {
-    const bg =
-      url.backdrop +
-      data?.results?.[Math.floor(Math.random() * 20)]?.backdrop_path;
-    setBackground(bg);
+    // Function to set a random backdrop
+    const setRandomBackdrop = () => {
+      const newBackground =
+        url.backdrop +
+        data?.results?.[Math.floor(Math.random() * 20)]?.backdrop_path;
+      setBackground(newBackground);
+    };
+
+    // Initial backdrop on component mount
+    setRandomBackdrop();
+
+    // Set interval to change backdrop every 10 seconds
+    const intervalId = setInterval(() => {
+      setRandomBackdrop();
+    }, 10000);
+
+    // Cleanup interval on component unmount
+    return () => {
+      clearInterval(intervalId);
+    };
   }, [data]);
 
-  const searchQueryHandler = (event) => {
-    if (event.key === "Enter" && query.length > 0) {
+  const searchHandler = () => {
+    if (query.length > 0) {
       navigate(`/search/${query}`);
+    }
+  };
+
+  const searchQueryHandler = (event) => {
+    if (event.key === "Enter") {
+      searchHandler();
     }
   };
 
@@ -54,7 +76,7 @@ const HeroBanner = () => {
               onChange={(e) => setQuery(e.target.value)}
               onKeyUp={searchQueryHandler}
             />
-            <button>Search</button>
+            <button onClick={searchHandler}>Search</button>
           </div>
         </div>
       </ContentWrapper>
